@@ -5,7 +5,7 @@ class ConnectFour {
 
   constructor() {
 
-    this.playerTurn = "O";
+    this.playerTurn = "X";
 
     this.grid = [[' ', ' ', ' ', ' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -22,7 +22,59 @@ class ConnectFour {
 
     // Replace this with real commands
     Screen.addCommand('t', 'test command (remove)', ConnectFour.testCommand);
+    Screen.addCommand('up', 'move up', ConnectFour.goUP.bind(this));
+    Screen.addCommand('down', 'move down', ConnectFour.goDown.bind(this));
+    Screen.addCommand('right', 'move right', ConnectFour.goRight.bind(this));
+    Screen.addCommand('left', 'move left', ConnectFour.goLeft.bind(this));
+    Screen.addCommand('p', 'place', ConnectFour.place.bind(this));
 
+    this.cursor.setBackgroundColor();
+    Screen.render();
+  }
+
+  static place() {
+    if (this.playerTurn === 'X' && this.grid[this.cursor.row][this.cursor.col] === ' ') {
+      this.grid[this.cursor.row][this.cursor.col] = 'X';
+      Screen.setGrid(this.cursor.row, this.cursor.col, 'X');
+      this.playerTurn = 'O';
+    } else if (this.playerTurn === 'O' && this.grid[this.cursor.row][this.cursor.col] === ' ') {
+      this.grid[this.cursor.row][this.cursor.col] = 'O';
+      Screen.setGrid(this.cursor.row, this.cursor.col, 'O');
+      this.playerTurn = 'X';
+    }
+
+    let isWon = ConnectFour.checkWin(this.grid);
+    if (isWon) {
+      ConnectFour.endGame(isWon);
+      return;
+    }
+
+  }
+
+  static goUP() {
+    this.cursor.resetBackgroundColor();
+    this.cursor.up();
+    this.cursor.setBackgroundColor();
+    Screen.render();
+  }
+
+  static goDown() {
+    this.cursor.resetBackgroundColor();
+    this.cursor.down();
+    this.cursor.setBackgroundColor();
+    Screen.render();
+  }
+
+  static goRight() {
+    this.cursor.resetBackgroundColor();
+    this.cursor.right();
+    this.cursor.setBackgroundColor();
+    Screen.render();
+  }
+
+  static goLeft() {
+    this.cursor.resetBackgroundColor();
+    this.cursor.left();
     this.cursor.setBackgroundColor();
     Screen.render();
   }
